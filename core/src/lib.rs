@@ -40,7 +40,7 @@ pub enum Err {
     KeyParseError(#[from] serde_json::Error),
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct CustomClaims {
     pub supplier_did: String,
     pub delivery_size_per_month: String,

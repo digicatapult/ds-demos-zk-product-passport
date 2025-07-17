@@ -5,15 +5,15 @@ the main risc0 repository
 [https://github.com/risc0/risc0/blob/main/examples/jwt-validator/src/main.rs](https://github.com/risc0/risc0/blob/main/examples/jwt-validator/src/main.rs)
 
 ## Proof scenario
-A user wants to prove that they have a JWT signed by one of three possible keys,
-but they do not want to reveal which (perhaps the customers have required that
-they must not share this information).
+A user wants to prove that they have a JWT signed by one of a number of possible
+keys, but they do not want to reveal which (perhaps the customers have required
+that they must not share this information).
 
 The signed JWT attests to the fact that the supplier shipped `1000` units of
-product to the customer.
+product to the customer, and attests to their DID.
 
 The public inputs to the proof are:
-- Three public keys, corresponding to three 'known' potential customers.
+- A number of public keys, corresponding to potential customers.
 - Some subset of claims stated by the JWT.  In this example, we have defined
   custom claims that record the DID associated with the supplier and the amount
   of product that they shipped.
@@ -32,18 +32,21 @@ Install rust.
 
 ## Running the demo
 ### Generate a token
-Run `cargo run --release --bin gen`.  This will generate a JWT signed
-using a secret key built into the binary, which is written to the filesystem as
-`./issued_token.jwt`.  The corresponding public key is provided as input to the
-proving routine, along with two other 'fake' public keys.
+Run `cargo run --release --bin gen test_sk.json issued_token.jwt`.  This will
+generate a JWT signed using a secret key built into the binary, which is written
+to the filesystem as `./issued_token.jwt`.  The corresponding public key is
+provided as input to the proving routine, along with two other 'fake' public
+keys.
 
 The JWT has custom fields that can be modified in `./core/src/lib.rs` if
 desirable (with necessary changes propagated throughout the repository).
 
 ### Prove the statement
-Run `RISC0_DEV_MODE=0 cargo run --release --bin prove` which will create the
-proof.  This will likely take a long time.  The 'receipt' is stored in
-`./receipt.bin`, which will be ingested by the verifier.
+Run `RISC0_DEV_MODE=0 cargo run --release --bin prove issued_token.jwt
+test_pk.json pk_other.json pk_other_2.json ...` which will create the proof.
+(Two or more public keys are required.) This will likely take a long time and
+use lots of RAM/swap.  The 'receipt' is stored in `./receipt.bin`, which will be
+ingested by the verifier.
 
 This process compiles a binary
 `./target/riscv32im-risc0-zkvm-elf/verify_token_with_some_key.bin` of RISC-V-ish
@@ -64,5 +67,5 @@ it was the real data.  Committing data to the journal is needed to allow the
 prover to assert what data was passed in from the host.
 
 ### Verify the proof
-Run `RISC0_DEV_MODE=0 cargo run --release --bin verify` to verify the
+Run `RISC0_DEV_MODE=0 cargo run --release --bin verify receipt.bin` to verify the
 proof. 

@@ -18,40 +18,34 @@ use risc0_zkvm::guest::env;
 fn main() {
     // read the token input
     let token: String = env::read();
-    let pk_0: String = env::read();
-    let pk_1: String = env::read();
-    let pk_2: String = env::read();
+    let num_public_keys = env::read();
+    let mut pks: Vec<String> = Vec::new();
 
-    let validator = pk_0
-        .parse::<Validator>()
-        .expect("failed to create validator from key");
-    let mut valid_token = validator.validate_token_integrity(&token);
-
-    if valid_token.is_err() {
-        let validator = pk_1
-            .parse::<Validator>()
-            .expect("failed to create validator from key");
-        valid_token = validator.validate_token_integrity(&token);
+    for _i in 0..num_public_keys {
+        pks.push(env::read());
     }
 
-    if valid_token.is_err() {
-        let validator = pk_2
-            .parse::<Validator>()
-            .expect("failed to create validator from key");
-        valid_token = validator.validate_token_integrity(&token);
-    }
+    let valid_token = pks
+        .iter()
+        .filter_map(|pk| {
+            pk.parse::<Validator>().ok().and_then(|validator| {
+                let status = validator.validate_token_integrity(&token).ok();
+                status
+            })
+        })
+        .next()
+        .expect("failed to validate token with any key");
 
-    let valid_token =
-        valid_token.unwrap_or_else(|_| panic!("failed to validate token with any key"));
+    let pks_string: Vec<String> = pks.iter().map(|pk| pk.to_string()).collect();
 
     let data = [
-        pk_0.to_string(),
-        pk_1.to_string(),
-        pk_2.to_string(),
-        valid_token.claims().custom.supplier_did.clone(),
-        valid_token.claims().custom.delivery_size_per_month.clone(),
+        pks_string,
+        vec![
+            valid_token.claims().custom.supplier_did.clone(),
+            valid_token.claims().custom.delivery_size_per_month.clone(),
+        ],
     ]
+    .concat()
     .join("||");
-
     env::commit(&data);
 }
