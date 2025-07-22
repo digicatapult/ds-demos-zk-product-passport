@@ -1,0 +1,16 @@
+{
+    "claims": [
+        {
+            "key": "supplier_did",
+            "value": "did:web:example.com"
+        },
+        {
+            "key": "delivery_quantity_kg",
+            "value": "1000"
+        },
+        {
+            "key": "product",
+            "value": "coffee"
+        }
+    ]
+}

@@ -41,9 +41,38 @@ pub enum Err {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
+struct ClaimItem {
+    key: String,
+    value: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
 pub struct CustomClaims {
-    pub supplier_did: String,
-    pub delivery_size_per_month: String,
+    claims: Vec<ClaimItem>,
+}
+
+impl CustomClaims {
+    pub fn new() -> Self {
+        CustomClaims { claims: Vec::new() }
+    }
+
+    pub fn add(&mut self, key: String, value: String) {
+        self.claims.push(ClaimItem { key, value });
+    }
+}
+
+impl std::fmt::Display for CustomClaims {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{{")?;
+        let mut it = self.claims.iter();
+        if let Some(first_item) = it.next() {
+            write!(f, "{}: {}", first_item.key, first_item.value)?;
+            for item in it {
+                write!(f, ", {}: {}", item.key, item.value)?;
+            }
+        }
+        write!(f, "}}")
+    }
 }
 
 pub struct Issuer {
@@ -141,10 +170,11 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let claims = CustomClaims {
-            supplier_did: "Hello, world!".to_string(),
-            delivery_size_per_month: "1000".to_string(),
-        };
+        let mut claims = CustomClaims::new();
+        claims.add(
+            "supplier_did".to_string(),
+            "did:web:example.com".to_string(),
+        );
 
         let iss = SECRET_KEY.parse::<Issuer>().unwrap();
         let token = iss.generate_token(&claims).unwrap();
@@ -152,15 +182,27 @@ mod tests {
         let validator = PUBLIC_KEY.parse::<Validator>().unwrap();
         let valid_token = validator.validate_token_integrity(&token).unwrap();
 
-        assert_eq!(valid_token.claims().custom.supplier_did, "Hello, world!");
+        assert_eq!(
+            valid_token
+                .claims()
+                .custom
+                .claims
+                .iter()
+                .find(|claim| claim.key == "supplier_did".to_string())
+                .unwrap()
+                .key,
+            "did:web:example.com".to_string()
+        );
     }
 
     #[test]
     fn it_fails_on_altered_token() {
-        let claims = CustomClaims {
-            supplier_did: "Test supplier_did".to_string(),
-            delivery_size_per_month: "1000".to_string(),
-        };
+        let mut claims = CustomClaims::new();
+        claims.add(
+            "supplier_did".to_string(),
+            "did:web:example.com".to_string(),
+        );
+        claims.add("delivery_size_per_month".to_string(), "1000".to_string());
 
         let iss = SECRET_KEY.parse::<Issuer>().unwrap();
         let mut token = iss.generate_token(&claims).unwrap();

@@ -23,15 +23,17 @@ fn main() {
 
     let args: Vec<String> = std::env::args().collect();
 
-    let claims = CustomClaims {
-        supplier_did: "did:web:example.com".to_string(),
-        delivery_size_per_month: "1000".to_string(),
-    };
-
     let mut f = std::fs::File::open(&args[1])
         .expect("Please provide issuer secret key in PEM format as first argument");
     let mut secret_key = "".to_string();
     f.read_to_string(&mut secret_key).unwrap();
+
+    let mut f = std::fs::File::open(&args[2])
+        .expect("Please provide custom claims in JSON file as second argument");
+    let mut claims_string = "".to_string();
+    f.read_to_string(&mut claims_string).unwrap();
+    let claims: CustomClaims =
+        serde_json::from_str(&claims_string).expect("Could not parse custom claims");
 
     let iss = secret_key
         .parse::<Issuer>()
@@ -40,7 +42,7 @@ fn main() {
         .generate_token(&claims)
         .expect("failed to generate token");
 
-    let mut f = File::create("./issued_token.jwt").expect("could not create file");
+    let mut f = File::create(&args[3]).expect("Could not create JWT file");
     f.write_all(&token.as_bytes())
-        .expect("could not write to file");
+        .expect("Could not write to file");
 }

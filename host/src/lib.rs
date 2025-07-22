@@ -16,10 +16,15 @@ use methods::VERIFY_TOKEN_WITH_SOME_KEY_ELF;
 use risc0_zkvm::{default_prover, ExecutorEnv, Receipt};
 
 pub fn prove_token_validation(token: String, pks: &Vec<String>) -> (Receipt, String) {
+    // Write the JWT
     let mut binding = ExecutorEnv::builder();
     let env = binding.write(&token).expect("failed to write JWT to env");
+
+    // Write the number of public keys
     env.write(&pks.len())
         .expect("Could not write number of public keys to env");
+
+    // Write the public keys
     for pk in pks.iter() {
         env.write(pk).expect("failed to write pk to env");
     }

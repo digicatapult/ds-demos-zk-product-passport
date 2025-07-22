@@ -35,9 +35,8 @@ fn main() {
 
     let res = receipt.verify(VERIFY_TOKEN_WITH_SOME_KEY_ID);
     if res.is_ok() {
-        println!("Proved and succesfully verified!");
-        println!("Result is: {:?}", res)
+        println!("Verification succeeded!");
     } else {
-        println!("Failed to verify proof!")
+        println!("Verification failed!")
     }
 }

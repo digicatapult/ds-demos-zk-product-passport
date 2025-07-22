@@ -18,7 +18,7 @@ use risc0_zkvm::guest::env;
 fn main() {
     // read the token input
     let token: String = env::read();
-    let num_public_keys = env::read();
+    let num_public_keys: usize = env::read();
     let mut pks: Vec<String> = Vec::new();
 
     for _i in 0..num_public_keys {
@@ -36,16 +36,8 @@ fn main() {
         .next()
         .expect("failed to validate token with any key");
 
-    let pks_string: Vec<String> = pks.iter().map(|pk| pk.to_string()).collect();
-
-    let data = [
-        pks_string,
-        vec![
-            valid_token.claims().custom.supplier_did.clone(),
-            valid_token.claims().custom.delivery_size_per_month.clone(),
-        ],
-    ]
-    .concat()
-    .join("||");
+    let mut output_strings: Vec<String> = pks.iter().map(|pk| pk.to_string()).collect();
+    output_strings.push(valid_token.claims().custom.to_string());
+    let data = output_strings.join("||");
     env::commit(&data);
 }
