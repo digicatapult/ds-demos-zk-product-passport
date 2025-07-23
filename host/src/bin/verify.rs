@@ -15,6 +15,8 @@
 use std::io::Read;
 
 use borsh::de::BorshDeserialize;
+use host::compute_fingerprint;
+use jwt_core::PublicOutput;
 use methods::VERIFY_TOKEN_WITH_SOME_KEY_ID;
 use risc0_zkvm::Receipt;
 
@@ -40,7 +42,21 @@ fn main() {
     let res = receipt.verify(VERIFY_TOKEN_WITH_SOME_KEY_ID);
     if res.is_ok() {
         println!("Verification succeeded!");
-        println!("Journal: {:?}", String::from_utf8(receipt.journal.bytes));
+        let public_outputs: PublicOutput = receipt
+            .journal
+            .decode()
+            .expect("Could not decode receipt journal");
+        println!("\nThe prover has a JWT signed by the secret key corresponding to one of the following public keys: ");
+
+        let pk_digests: Vec<String> = public_outputs
+            .pks
+            .into_iter()
+            .map(|pk| compute_fingerprint(pk))
+            .collect();
+        println!("{:#?}", pk_digests);
+
+        println!("\nThe JWT attests to the following public claims (and 0 or more undisclosed private claims): ");
+        println!("{:}", public_outputs.claims.pretty_print());
     } else {
         println!("Verification failed!")
     }

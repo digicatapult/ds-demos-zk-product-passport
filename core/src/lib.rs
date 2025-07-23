@@ -22,6 +22,12 @@ use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use thiserror::Error;
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct PublicOutput {
+    pub pks: Vec<String>,
+    pub claims: CustomClaims,
+}
+
 #[derive(Error, Debug)]
 pub enum Err {
     #[error("Failed to generate token: {0}")]
@@ -72,12 +78,30 @@ impl CustomClaims {
         });
     }
 
-    pub fn public_claims(&self) -> Self {
+    pub fn get_public_claims(&self) -> Self {
         self.claims
             .clone()
             .into_iter()
             .filter(|claim_item| !claim_item.is_private)
             .collect()
+    }
+
+    pub fn pretty_print(&self) -> String {
+        let mut result = "{".to_string();
+        let mut custom_claims = self.claims.iter();
+        if let Some(first_claim_item) = custom_claims.next() {
+            result += &format!(
+                "\n    \"{}\": \"{}\"",
+                first_claim_item.key, first_claim_item.value
+            )
+            .to_string();
+        }
+        for claim_item in custom_claims {
+            result +=
+                &format!(",\n    \"{}\": \"{}\"", claim_item.key, claim_item.value).to_string();
+        }
+        result += "\n}";
+        result
     }
 }
 

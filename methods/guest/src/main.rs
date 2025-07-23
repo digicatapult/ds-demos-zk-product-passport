@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use jwt_core::Validator;
+use jwt_core::{PublicOutput, Validator};
 use risc0_zkvm::guest::env;
 
 fn main() {
@@ -36,8 +36,9 @@ fn main() {
         .next()
         .expect("failed to validate token with any key");
 
-    let mut output_strings: Vec<String> = pks.iter().map(|pk| pk.to_string()).collect();
-    output_strings.push(valid_token.claims().custom.public_claims().to_string());
-    let data = output_strings.join("||");
-    env::commit(&data);
+    let public_output = PublicOutput {
+        pks,
+        claims: valid_token.claims().custom.get_public_claims(),
+    };
+    env::commit(&public_output);
 }

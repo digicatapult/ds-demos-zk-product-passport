@@ -12,8 +12,50 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use base64::prelude::*;
 use methods::VERIFY_TOKEN_WITH_SOME_KEY_ELF;
+use risc0_zkvm::sha::rust_crypto::Sha256;
 use risc0_zkvm::{default_prover, ExecutorEnv, Receipt};
+use serde::Serialize;
+use serde_json::Value;
+use sha2::Digest;
+
+#[derive(Serialize)]
+struct FingerprintableJwk {
+    e: String,
+    kty: String,
+    n: String,
+}
+
+pub fn compute_fingerprint(pk: String) -> String {
+    let public_key: Value = serde_json::from_str(&pk).expect("Could not parse key");
+
+    let e = public_key
+        .get("e")
+        .expect("Could not find mandatory field 'e'")
+        .to_string()
+        .replace("\"", "");
+
+    let kty = public_key
+        .get("kty")
+        .expect("Could not find mandatory field 'kty'")
+        .to_string()
+        .replace("\"", "");
+
+    let n = public_key
+        .get("n")
+        .expect("Could not find mandatory field 'n'")
+        .to_string()
+        .replace("\"", "");
+
+    let fingerprintable_jwk = FingerprintableJwk { e, kty, n };
+
+    let fingerprintable_jwk_as_str = serde_json::to_string(&fingerprintable_jwk).unwrap();
+
+    let digest = Sha256::digest(fingerprintable_jwk_as_str);
+
+    BASE64_URL_SAFE.encode(digest).replace("=", "")
+}
 
 pub fn prove_token_validation(token: String, pks: &Vec<String>) -> (Receipt, String) {
     // Write the JWT
@@ -37,10 +79,11 @@ pub fn prove_token_validation(token: String, pks: &Vec<String>) -> (Receipt, Str
         .expect("failed to prove")
         .receipt;
 
-    let output: String = receipt
-        .journal
-        .decode()
-        .expect("Journal should decode to string.");
+    /*let output: String = receipt
+    .journal
+    .decode()
+    .expect("Journal should decode to string.");*/
+    let output = "".to_string();
 
     (receipt, output)
 }
