@@ -23,6 +23,17 @@ use std::str::FromStr;
 use thiserror::Error;
 
 #[derive(Serialize, Deserialize, Debug)]
+pub struct ConflictZone {
+    pub country: String,
+    pub region: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ConflictZones {
+    pub zones: Vec<ConflictZone>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct PublicOutput {
     pub pks: Vec<String>,
     pub claims: CustomClaims,
@@ -47,15 +58,15 @@ pub enum Err {
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
-struct ClaimItem {
-    key: String,
-    value: String,
-    is_private: bool,
+pub struct ClaimItem {
+    pub key: String,
+    pub value: String,
+    pub is_private: bool,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CustomClaims {
-    claims: Vec<ClaimItem>,
+    pub claims: Vec<ClaimItem>,
 }
 
 impl FromIterator<ClaimItem> for CustomClaims {

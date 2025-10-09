@@ -1,0 +1,24 @@
+{
+    "zones": [
+        {
+            "country": "GB",
+            "region": "Warwickshire"
+        },
+        {
+            "country": "GB",
+            "region": "London"
+        },
+        {
+            "country": "GB",
+            "region": "Cheshire"
+        },
+        {
+            "country": "GB",
+            "region": "Buckinghamshire"
+        },
+        {
+            "country": "GB",
+            "region": "Northumberland"
+        }
+    ]
+}

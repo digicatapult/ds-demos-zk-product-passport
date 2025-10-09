@@ -1,0 +1,39 @@
+{
+  "claims": [
+    {
+      "key": "issuer_id",
+      "value": "National Mining Authority",
+      "is_private": false
+    },
+    {
+      "key": "subject_id",
+      "value": "ACME Mining Company",
+      "is_private": false
+    },
+    {
+      "key": "issue_date",
+      "value": "2025-01-01T00:00:00Z",
+      "is_private": false
+    },
+    {
+      "key": "expiry_date",
+      "value": "2035-01-01T00:00:00Z",
+      "is_private": false
+    },
+    {
+      "key": "country_of_operation",
+      "value": "GB",
+      "is_private": false
+    },
+    {
+      "key": "region_of_operation",
+      "value": "Cornwall",
+      "is_private": false
+    },
+    {
+      "key": "subject_pk",
+      "value": "{\n    \"alg\": \"RS256\",\n    \"e\": \"AQAB\",\n    \"key_ops\": [\n        \"verify\"\n    ],\n    \"kty\": \"RSA\",\n    \"n\": \"zcQwXx3EevOSkfH0VSWqtfmWTL4c2oIzW6u83qKO1W7XjLgTqpryL5vNCaxbVTkpU-GZctit0n6kj570tfny_sy6pb2q9wlvFBmDVyD-nL5oNjP5s3qEfvy15Bl9vMGFf3zycqMaVg_7VRVwK5d8QzpnVC0AGT10QdHnyGCadfPJqazTuVRp1f3ecK7bg7596sgVb8d9Wpaz2XPykQPfphsEb40vcp1tPN95-eRCgA24PwfUaKYHQQFMEQY_atJWbffyJ91zsBRy8fEQdfuQVZIRVQgO7FTsmLmQAHxR1dl2jP8B6zonWmtqWoMHoZfa-kmTPB4wNHa8EaLvtQ1060qYFmQWWumfNFnG7HNq2gTHt1cN1HCwstRGIaU_ZHubM_FKH_gLfJPKNW0KWML9mQQzf4AVov0Yfvk89WxY8ilSRx6KodJuIKKqwVh_58PJPLmBqszEfkTjtyxPwP8X8xRXfSz-vTU6vESCk3O6TRknoJkC2BJZ_ONQ0U5dxLcx\",\n    \"use\": \"sig\",\n    \"kid\": \"6ab0e8e4bc121fc287e35d3e5e0efb8a\"\n}",
+      "is_private": false
+    }
+  ]
+}

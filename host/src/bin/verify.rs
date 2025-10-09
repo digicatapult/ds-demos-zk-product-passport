@@ -42,12 +42,11 @@ fn main() {
     let res = receipt.verify(VERIFY_TOKEN_WITH_SOME_KEY_ID);
     if res.is_ok() {
         println!("Verification succeeded!");
+        println!("The prover has proved they hold a product passport that is authenticated by a mining licence that is authenticated by the following national mining authority key:");
         let public_outputs: PublicOutput = receipt
             .journal
             .decode()
             .expect("Could not decode receipt journal");
-        println!("\nThe prover has a JWT signed by the secret key corresponding to one of the following public keys: ");
-
         let pk_digests: Vec<String> = public_outputs
             .pks
             .into_iter()
@@ -55,7 +54,7 @@ fn main() {
             .collect();
         println!("{:#?}", pk_digests);
 
-        println!("\nThe JWT attests to the following public claims (and 0 or more undisclosed private claims): ");
+        println!("\nThe following information was proved about the product passport:");
         println!("{:}", public_outputs.claims.pretty_print());
     } else {
         println!("Verification failed!")

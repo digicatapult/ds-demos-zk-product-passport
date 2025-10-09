@@ -1,0 +1,29 @@
+{
+    "claims": [
+        {
+            "key": "public_key",
+            "value": "{    \"alg\": \"RS256\",    \"e\": \"AQAB\",    \"key_ops\": [        \"verify\"        ],    \"kty\": \"RSA\",    \"n\": \"zcQwXx3EevOSkfH0VSWqtfmWTL4c2oIzW6u83qKO1W7XjLgTqpryL5vNCaxbVTkpU-GZctit0n6kj570tfny_sy6pb2q9wlvFBmDVyD-nL5oNjP5s3qEfvy15Bl9vMGFf3zycqMaVg_7VRVwK5d8QzpnVC0AGT10QdHnyGCadfPJqazTuVRp1f3ecK7bg7596sgVb8d9Wpaz2XPykQPfphsEb40vcp1tPN95-eRCgA24PwfUaKYHQQFMEQY_atJWbffyJ91zsBRy8fEQdfuQVZIRVQgO7FTsmLmQAHxR1dl2jP8B6zonWmtqWoMHoZfa-kmTPB4wNHa8EaLvtQ1060qYFmQWWumfNFnG7HNq2gTHt1cN1HCwstRGIaU_ZHubM_FKH_gLfJPKNW0KWML9mQQzf4AVov0Yfvk89WxY8ilSRx6KodJuIKKqwVh_58PJPLmBqszEfkTjtyxPwP8X8xRXfSz-vTU6vESCk3O6TRknoJkC2BJZ_ONQ0U5dxLcx\",    \"use\": \"sig\",    \"kid\": \"6ab0e8e4bc121fc287e35d3e5e0efb8a\"    }",
+            "is_private": true
+        },
+        {
+            "key": "issue_date",
+            "value": "1970-01-01T00:00:00Z",
+            "is_private": true
+        },
+        {
+            "key": "expiry_date",
+            "value": "2038-01-19T03:14:07Z",
+            "is_private": true
+        },
+        {
+            "key": "country",
+            "value": "ZW",
+            "is_private": true
+        },
+        {
+            "key": "region",
+            "value": "Masvingo",
+            "is_private": true
+        }
+    ]
+}

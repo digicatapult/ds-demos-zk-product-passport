@@ -13,39 +13,69 @@
 // limitations under the License.
 
 use borsh::ser::BorshSerialize;
+use clap::Parser;
 use host::prove_token_validation;
 use std::fs::File;
 use std::io::prelude::*;
+
+/// Prove a JWT was signed
+#[derive(Parser, Debug)]
+#[command(version, about, long_about = None)]
+struct Args {
+    /// Path to signing key
+    #[arg(short, long)]
+    path_to_mining_authority_pk: String,
+
+    /// Path to product passport
+    #[arg(short, long)]
+    passport_file_path: String,
+
+    /// Path to licence
+    #[arg(short, long)]
+    licence_file_path: String,
+
+    /// Path to conflict zones JSON file
+    #[arg(short, long)]
+    conflict_zones_file_path: String,
+
+    /// Path to receipt file
+    #[arg(short, long)]
+    receipt_file_path: String,
+}
 
 fn main() {
     tracing_subscriber::fmt()
         .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
         .init();
 
-    let args: Vec<String> = std::env::args().collect();
+    let args = Args::parse();
 
-    if args.len() < 4 {
-        panic!("Usage: prove /path/to/token.jwt /path/to/receipt.bin /path/to/public_key_1.json ... /path/to/public_key_n.json");
-    }
+    let mut f = File::open(&args.passport_file_path).expect("Could not find passport file");
+    let mut passport = String::new();
+    f.read_to_string(&mut passport)
+        .expect("Could not parse passport from file");
 
-    let mut f = File::open(&args[1]).expect("Could not find token file");
-    let mut token = String::new();
-    f.read_to_string(&mut token)
-        .expect("Could not parse token from file");
+    let mut f = File::open(&args.licence_file_path).expect("Could not find licence file");
+    let mut licence = String::new();
+    f.read_to_string(&mut licence)
+        .expect("Could not parse licence from file");
 
-    let mut pks: Vec<String> = Vec::new();
+    let mut f =
+        File::open(&args.path_to_mining_authority_pk).expect("Could not find public key file");
+    let mut pk = String::new();
+    f.read_to_string(&mut pk)
+        .expect("Could not parse public key from file");
 
-    for i in 3..args.len() {
-        let mut f = File::open(&args[i]).expect("Could not find public key file");
-        let mut pk = String::new();
-        f.read_to_string(&mut pk)
-            .expect("Could not parse public key from file");
-        pks.push(pk);
-    }
+    let mut f =
+        File::open(&args.conflict_zones_file_path).expect("Could not find conflict zones file");
+    let mut conflict_zones = String::new();
+    f.read_to_string(&mut conflict_zones)
+        .expect("Could not parse conflict zones from file");
 
-    let (receipt, _journal) = prove_token_validation(token, &pks);
+    let (receipt, _journal) = prove_token_validation(passport, licence, pk, conflict_zones);
 
-    let mut f = std::fs::File::create(&args[2]).expect("Could not create receipt file");
+    let mut f =
+        std::fs::File::create(&args.receipt_file_path).expect("Could not create receipt file");
     let mut serialized_receipt = Vec::new();
     receipt
         .serialize(&mut serialized_receipt)

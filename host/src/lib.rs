@@ -57,19 +57,23 @@ pub fn compute_fingerprint(pk: String) -> String {
     BASE64_URL_SAFE.encode(digest).replace("=", "")
 }
 
-pub fn prove_token_validation(token: String, pks: &Vec<String>) -> (Receipt, String) {
+pub fn prove_token_validation(
+    passport: String,
+    licence: String,
+    pk: String,
+    conflict_zones: String,
+) -> (Receipt, String) {
     // Write the JWT
     let mut binding = ExecutorEnv::builder();
-    let env = binding.write(&token).expect("failed to write JWT to env");
-
-    // Write the number of public keys
-    env.write(&pks.len())
-        .expect("Could not write number of public keys to env");
-
-    // Write the public keys
-    for pk in pks.iter() {
-        env.write(pk).expect("failed to write pk to env");
-    }
+    let env = binding
+        .write(&passport)
+        .expect("failed to write product passport to env");
+    env.write(&licence)
+        .expect("failed to write mining licence to env");
+    env.write(&pk)
+        .expect("failed to write mining authority key to env");
+    env.write(&conflict_zones)
+        .expect("failed to write conflict zones to env");
     let env = env.build().expect("failed to build env");
 
     let prover = default_prover();
