@@ -23,8 +23,8 @@ default = []
 prove = ["risc0-zkvm/prove"]
 
 [[bin]]
-name = "gen_mining_licence_claims_file"
-path = "./src/bin/gen_mining_licence_claims_file.rs"
+name = "gen_claims_file"
+path = "./src/bin/gen_claims_file.rs"
 
 [[bin]]
 name = "sign"

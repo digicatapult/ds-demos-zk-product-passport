@@ -6,7 +6,7 @@ from gooey import Gooey, GooeyParser
 @Gooey(program_name="Zero Knowledge Product Passport Verifier", env={'GOOEY_THEME': 'dark'})
 def main():
     parser = GooeyParser(description="Verify a Zero Knowledge Product Passport")
-    parser.add_argument('receipt', help="Proof file", widget="FileChooser")
+    parser.add_argument('receipt', help="Proof file", widget="FileChooser", default="./receipt.bin")
 
     args = parser.parse_args()
 

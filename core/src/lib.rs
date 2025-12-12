@@ -61,7 +61,6 @@ pub enum Err {
 pub struct ClaimItem {
     pub key: String,
     pub value: String,
-    pub is_private: bool,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -81,20 +80,8 @@ impl CustomClaims {
         CustomClaims { claims: Vec::new() }
     }
 
-    pub fn add(&mut self, key: String, value: String, is_private: bool) {
-        self.claims.push(ClaimItem {
-            key,
-            value,
-            is_private,
-        });
-    }
-
-    pub fn get_public_claims(&self) -> Self {
-        self.claims
-            .clone()
-            .into_iter()
-            .filter(|claim_item| !claim_item.is_private)
-            .collect()
+    pub fn add(&mut self, key: String, value: String) {
+        self.claims.push(ClaimItem { key, value });
     }
 
     pub fn pretty_print(&self) -> String {
@@ -229,7 +216,6 @@ mod tests {
         claims.add(
             "supplier_did".to_string(),
             "did:web:example.com".to_string(),
-            true,
         );
 
         let iss = SECRET_KEY.parse::<Issuer>().unwrap();
@@ -257,13 +243,8 @@ mod tests {
         claims.add(
             "supplier_did".to_string(),
             "did:web:example.com".to_string(),
-            true,
         );
-        claims.add(
-            "delivery_size_per_month".to_string(),
-            "1000".to_string(),
-            false,
-        );
+        claims.add("delivery_size_per_month".to_string(), "1000".to_string());
 
         let iss = SECRET_KEY.parse::<Issuer>().unwrap();
         let mut token = iss.generate_token(&claims).unwrap();

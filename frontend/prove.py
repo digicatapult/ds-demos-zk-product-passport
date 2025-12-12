@@ -5,11 +5,11 @@ from gooey import Gooey, GooeyParser
 @Gooey(program_name="Zero Knowledge Product Passport Generator")
 def main():
     parser = GooeyParser(description="Generate a JWT")
-    parser.add_argument('passport', help="Product passport", widget="FileChooser")
-    parser.add_argument('licence', help="Mining licence", widget="FileChooser")
-    parser.add_argument('verification_key', help="National mining authority verification key", widget="FileChooser")
-    parser.add_argument('conflict_zones', help="Conflict zones file", widget="FileChooser")
-    parser.add_argument('receipt_file', help="Receipt file", widget="FileSaver")
+    parser.add_argument('passport', help="Product passport", widget="FileChooser", default="./product_passport.jwt")
+    parser.add_argument('licence', help="Mining licence", widget="FileChooser", default="./licence.jwt")
+    parser.add_argument('verification_key', help="National mining authority verification key", widget="FileChooser", default="../test_data/national_mining_authority_pk.jwk")
+    parser.add_argument('conflict_zones', help="Conflict zones file", widget="FileChooser", default="../test_data/conflict_zones.json")
+    parser.add_argument('receipt_file', help="Receipt file", widget="FileSaver", default="./receipt.bin")
 
     args = parser.parse_args()
 
@@ -23,16 +23,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-    # # Generate product passport
-    
-    # ./target/release/gen -s ./host/national_mining_authority_sk.jwk -c ./host/licence_claims.json -t ./licence.jwt 
-
-    # # Generate mining licence
-    # ./target/release/gen -s ./host/mining_company_sk.jwk -c ./host/product_passport_claims.json -t ./passport.jwt
-
-    # # Prove
-    # ./target/release/prove -p ./passport.jwt -l ./licence.jwt -v ./host/national_mining_authority_pk.jwk -c ./host/conflict_zones.json
-
-    # # Verify
-    # ./target/release/verify ./receipt.bin 

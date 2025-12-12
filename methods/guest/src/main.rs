@@ -1,3 +1,6 @@
+// Modified from files in RISC Zero example repo
+// https://github.com/risc0/risc0/blob/main/examples/jwt-validator/
+
 // Copyright 2024 RISC Zero, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,14 +20,11 @@ use jwt_core::{ClaimItem, ConflictZones, CustomClaims, PublicOutput, Validator};
 use risc0_zkvm::guest::env;
 
 fn main() {
-    // read the token input
+    // Read the token input
     let product_passport: String = env::read();
     let mining_licence: String = env::read();
     let nma_public_key: String = env::read();
     let conflict_zones_str: String = env::read();
-
-    // Check the mining licence was valid when the product passport was issued
-    // Check something is in a bound
 
     let validator = nma_public_key
         .parse::<Validator>()
@@ -129,18 +129,15 @@ fn main() {
                         .expect("Could not find shipment_id")
                         .value
                         .to_string(),
-                    is_private: false,
                 },
                 passport_issue_date_claimitem.clone(),
                 ClaimItem {
                     key: "licence_valid_when_signing_product_passport".to_string(),
                     value: licence_valid_when_signing_product_passport.to_string(),
-                    is_private: false,
                 },
                 ClaimItem {
                     key: "not_operating_in_following_zones".to_string(),
                     value: conflict_zones_str,
-                    is_private: false,
                 },
             ]
             .to_vec(),
