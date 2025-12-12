@@ -12,7 +12,12 @@ precise details about who the supplier was.
 We use RISC Zero to generate and verify zero-knowledge proofs and provide a GUI
 frontend using the Python library Gooey.
 
-## Install
+## Table of Contents
+
+- [Setup](#setup)
+- [Getting Started](#getting-started)
+
+## Setup
 - Follow the Risc Zero installation steps and then build the rust binaries in
   the repo root:
 ```bash
@@ -25,7 +30,7 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-## Run
+## Getting Started
 The process is as follows:
 - Sign a mining licence
 - Sign a product passport using the mining licence
