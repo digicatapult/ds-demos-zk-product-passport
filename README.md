@@ -37,14 +37,21 @@ The process is as follows:
 - Prove fixed information about the mining licence
 - Verify the proof
 
-Each operation can be performed using a GUI:
+If the mining licence indicates that the company operates in a conflict zone
+listed in the `conflict_zones.json` input file, they will not be able to
+generate a zero-knowledge product passport that will be accepted by the
+verifier.
+
+Each operation can be performed using a GUI, e.g.:
 ```bash
 cd frontend
 source .venv/bin/activate
 python sign_mining_licence.py
 ```
 
-Test data is provided in the `./test_data` directory.
+Test data is provided in the `./test_data` directory.  Here, you can modify the
+set of conflict zones.
 
-Note that due to limitations of the library, the frontend does not display
+## Limitations
+Note that due to limitations of the GUI library, the frontend does not display
 properly when using dark mode on MacOS.
