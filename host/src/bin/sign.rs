@@ -1,7 +1,8 @@
-// Modified from files in RISC Zero example repo
-// https://github.com/risc0/risc0/blob/main/examples/jwt-validator/
+// This file has been modified from
+// https://github.com/risc0/risc0/blob/main/examples/jwt-validator/src/main.rs
+// which has the following licence
 
-// Copyright 2024 RISC Zero, Inc.
+// Copyright 2026 RISC Zero, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
