@@ -10,8 +10,9 @@ which allows, say, a distributor to prove the provenance of their product
 precise details about who the supplier was.
 
 ## Installation
-- Follow the Risc Zero installation steps and then run `cargo build --release`
-  in the repository root.
+- Install [rust](https://rust-lang.org/tools/install) and
+[RISC0](https://dev.risczero.com/api/zkvm/install), and then run `cargo build
+  --release` in the repository root.
 - Install dependencies for the frontend:
 ```bash
 cd frontend
