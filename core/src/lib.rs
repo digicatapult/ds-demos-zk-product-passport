@@ -236,7 +236,7 @@ mod tests {
                 .iter()
                 .find(|claim| claim.key == "supplier_did".to_string())
                 .unwrap()
-                .key,
+                .value,
             "did:web:example.com".to_string()
         );
     }

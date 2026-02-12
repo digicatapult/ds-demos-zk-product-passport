@@ -2,4 +2,6 @@
 Cargo.lock
 methods/guest/Cargo.lock
 target/
-*.jwt
+frontend/*.jwt
+frontend/*.json
+frontend/*.bin

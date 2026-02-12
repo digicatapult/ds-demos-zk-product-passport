@@ -95,3 +95,73 @@ pub fn prove_token_validation(
 
     (receipt, output)
 }
+
+#[cfg(test)]
+mod test {
+
+    use methods::VERIFY_TOKEN_WITH_SOME_KEY_ID;
+
+    use super::*;
+
+    const MINING_COMPANY_PK: &str = r#"{
+    "alg": "RS256",
+    "e": "AQAB",
+    "key_ops": [
+        "verify"
+    ],
+    "kty": "RSA",
+    "n": "zcQwXx3EevOSkfH0VSWqtfmWTL4c2oIzW6u83qKO1W7XjLgTqpryL5vNCaxbVTkpU-GZctit0n6kj570tfny_sy6pb2q9wlvFBmDVyD-nL5oNjP5s3qEfvy15Bl9vMGFf3zycqMaVg_7VRVwK5d8QzpnVC0AGT10QdHnyGCadfPJqazTuVRp1f3ecK7bg7596sgVb8d9Wpaz2XPykQPfphsEb40vcp1tPN95-eRCgA24PwfUaKYHQQFMEQY_atJWbffyJ91zsBRy8fEQdfuQVZIRVQgO7FTsmLmQAHxR1dl2jP8B6zonWmtqWoMHoZfa-kmTPB4wNHa8EaLvtQ1060qYFmQWWumfNFnG7HNq2gTHt1cN1HCwstRGIaU_ZHubM_FKH_gLfJPKNW0KWML9mQQzf4AVov0Yfvk89WxY8ilSRx6KodJuIKKqwVh_58PJPLmBqszEfkTjtyxPwP8X8xRXfSz-vTU6vESCk3O6TRknoJkC2BJZ_ONQ0U5dxLcx",
+    "use": "sig",
+    "kid": "6ab0e8e4bc121fc287e35d3e5e0efb8a"
+}"#;
+    const NATIONAL_MINING_AUTHORITY_PK: &str = r#"{
+    "kty": "RSA",
+    "e": "AQAB",
+    "use": "sig",
+    "alg": "RS256",
+    "n": "4B_DNuHWOWWD6wMyRihP6kGQyXdKeUVNAMuNpoXYHg1eLRJ0KJJMomD3MIjp3GpIPWck_gdnYQYEOPYdJN8FsS9VF3V_3gRaRD0As1DQeoMLKWSsC5_Ah7L_QXoj2BE-oKg1uyS8S5Qnq-bNsdNZ9idMtWN2Qk-43Wi8aN_6kYZ1Rb0oSr8ogi4CG0HtAYJajo3jFHvLRdTPfOLXVL6v_7Ta1uZJDQ0NBe_pPewGIURO8IVcdj7yF7xa1s90zSolUKq2xzfLV6pSOrI5X89gELmsEnRjKLMpp0lwenMUfpHITY3jmZYhqyikvLM_MGmw_OxuAclkOAS2xT4FmxE0Lw"
+}"#;
+
+    #[test]
+    pub fn test_compute_fingerprint() {
+        assert_eq!(
+            compute_fingerprint(MINING_COMPANY_PK.to_string()),
+            "US_g-NguIHYSNN95ZHMM0_gUI4iM9afv8KPyySaAnUQ".to_string()
+        );
+    }
+
+    #[test]
+    pub fn test_prove_token_validation() {
+        let passport: String = "eyJhbGciOiJSUzI1NiJ9.eyJjbGFpbXMiOlt7ImtleSI6InNoaXBtZW50X2lkIiwidmFsdWUiOiI2NTMzMjEifSx7ImtleSI6Imlzc3VlX2RhdGUiLCJ2YWx1ZSI6IjIwMjUtMTItMDFUMDA6MDA6MDBaIn0seyJrZXkiOiJwcm9kdWN0IiwidmFsdWUiOiJMaXRoaXVtIn1dfQ.WphEqQT9DzJjNhPoYrRYlbNxEp2F3H0lvtmbP6uVNeMVMoV_2O0PwPFmnfNWaAdZ25XyoYN1hPGR050JSQ0ud-UD1_krAuKmMGP-iD1faaJjwiqs0BXJHNe6Zu_2CMindr8bhh6QrF0FSC1te97bAyjpmSai5IfT9D7jPQaqxl33-MWuWE__UsJztRLGrrP62G5fkyUL5m27Eirhdd99J4JHke0G7PjECM4um4DJ1eJs5OG7mMFEvoVJAnOlaMsLKKEsmjN-Xll2kwJHbmXblDH2A9AKl33ZafmbyMTHEEZD1lK_D-96cTi27ldCE3ERWvtoEhCE-PXCJPIMJ3OHFWbfQ_YCUHgB4QHYK4VYjEIiPLZ2kj7H_tX2Ly0wwQNZfWqtv5ozG88s8hmAsE3nY1z8_ngNuvIEtHAD7dkhj_UuvtW18LDN8RuOcZrB3lp0TaNq0CLjzH7cUJX6NqCIpIP9i_Al63wMfjm6iHnQPwNZndvneKmdWWkvyBAXguSI".to_string();
+        let licence: String = "eyJhbGciOiJSUzI1NiJ9.eyJjbGFpbXMiOlt7ImtleSI6Imlzc3Vlcl9pZCIsInZhbHVlIjoiTmF0aW9uYWxfTWluaW5nX0F1dGhvcml0eSJ9LHsia2V5Ijoic3ViamVjdF9pZCIsInZhbHVlIjoiQUNNRV9NaW5pbmdfQ29tcGFueSJ9LHsia2V5IjoiaXNzdWVfZGF0ZSIsInZhbHVlIjoiMjAyNS0wMS0wMVQwMDowMDowMFoifSx7ImtleSI6ImV4cGlyeV9kYXRlIiwidmFsdWUiOiIyMDM1LTAxLTAxVDAwOjAwOjAwWiJ9LHsia2V5IjoiY291bnRyeV9vZl9vcGVyYXRpb24iLCJ2YWx1ZSI6IkdCIn0seyJrZXkiOiJyZWdpb25fb2Zfb3BlcmF0aW9uIiwidmFsdWUiOiJDb3Jud2FsbCJ9LHsia2V5Ijoic3ViamVjdF9wayIsInZhbHVlIjoie1xuICAgIFwiYWxnXCI6IFwiUlMyNTZcIixcbiAgICBcImVcIjogXCJBUUFCXCIsXG4gICAgXCJrZXlfb3BzXCI6IFtcbiAgICAgICAgXCJ2ZXJpZnlcIlxuICAgIF0sXG4gICAgXCJrdHlcIjogXCJSU0FcIixcbiAgICBcIm5cIjogXCJ6Y1F3WHgzRWV2T1NrZkgwVlNXcXRmbVdUTDRjMm9Jelc2dTgzcUtPMVc3WGpMZ1RxcHJ5TDV2TkNheGJWVGtwVS1HWmN0aXQwbjZrajU3MHRmbnlfc3k2cGIycTl3bHZGQm1EVnlELW5MNW9OalA1czNxRWZ2eTE1Qmw5dk1HRmYzenljcU1hVmdfN1ZSVndLNWQ4UXpwblZDMEFHVDEwUWRIbnlHQ2FkZlBKcWF6VHVWUnAxZjNlY0s3Ymc3NTk2c2dWYjhkOVdwYXoyWFB5a1FQZnBoc0ViNDB2Y3AxdFBOOTUtZVJDZ0EyNFB3ZlVhS1lIUVFGTUVRWV9hdEpXYmZmeUo5MXpzQlJ5OGZFUWRmdVFWWklSVlFnTzdGVHNtTG1RQUh4UjFkbDJqUDhCNnpvbldtdHFXb01Ib1pmYS1rbVRQQjR3TkhhOEVhTHZ0UTEwNjBxWUZtUVdXdW1mTkZuRzdITnEyZ1RIdDFjTjFIQ3dzdFJHSWFVX1pIdWJNX0ZLSF9nTGZKUEtOVzBLV01MOW1RUXpmNEFWb3YwWWZ2azg5V3hZOGlsU1J4NktvZEp1SUtLcXdWaF81OFBKUExtQnFzekVma1RqdHl4UHdQOFg4eFJYZlN6LXZUVTZ2RVNDazNPNlRSa25vSmtDMkJKWl9PTlEwVTVkeExjeFwiLFxuICAgIFwidXNlXCI6IFwic2lnXCIsXG4gICAgXCJraWRcIjogXCI2YWIwZThlNGJjMTIxZmMyODdlMzVkM2U1ZTBlZmI4YVwiXG59In1dfQ.mCnNzGYkmBsiLjJ-4Mj3eQsbZXQXjsIAETadL2upPt-0s9C24jdjYjQ8MAzRL8RgLN7lIzxZf4KEbOeQag6f4DTkqPbiZVF5ROO-L9MTHj4MN5UHbNixKxMCe1HAdcggNmvl0AepcI-mI8-_mq2Ttz3jhliXytk30VHznhh6Gq5Lh_WhPXc0Jn9vNDxiRZ5nyvrDFHWMpUZkk4c3yUngNiscYcgQXiAxpg23huJbCBDQolq_MvrIY6fV9pT5MiDRN-eq1WC1Yj9vOGZqDUVvOwqi16G0OSof52fNiil8Ouwn2at8WnHWo_Gi5E99MZX23q50JLCGcvpj-ITH2mYcuw".to_string();
+        let pk: String = NATIONAL_MINING_AUTHORITY_PK.to_string();
+        let conflict_zones: String = r#"{
+    "zones": [
+        {
+            "country": "GB",
+            "region": "Warwickshire"
+        },
+        {
+            "country": "GB",
+            "region": "London"
+        },
+        {
+            "country": "GB",
+            "region": "Cheshire"
+        },
+        {
+            "country": "GB",
+            "region": "Buckinghamshire"
+        },
+        {
+            "country": "GB",
+            "region": "Northumberland"
+        }
+    ]
+}"#
+        .to_string();
+
+        let (receipt, _) = prove_token_validation(passport, licence, pk, conflict_zones);
+        assert!(receipt.verify(VERIFY_TOKEN_WITH_SOME_KEY_ID).is_ok());
+    }
+}
