@@ -164,4 +164,109 @@ mod test {
         let (receipt, _) = prove_token_validation(passport, licence, pk, conflict_zones);
         assert!(receipt.verify(VERIFY_TOKEN_WITH_SOME_KEY_ID).is_ok());
     }
+
+    #[test]
+    #[should_panic]
+    fn test_invalid_passport_sig() {
+        let passport: String = "eyJhbGciOiJSUzI1NiJ9.eyJjbGFpbXMiOlt7ImtleSI6InNoaXBtZW50X2lkIiwidmFsdWUiOiI2NTMzMjEifSx7ImtleSI6Imlzc3VlX2RhdGUiLCJ2YWx1ZSI6IjIwMjUtMTItMDFUMDA6MDA6MDBaIn0seyJrZXkiOiJwcm9kdWN0IiwidmFsdWUiOiJMaXRoaXVtIn1dfQ.WphEqQT9DzJjNhPoYrRYlbNxEp2F3H0lvtmbP6uVNeMVMoV_2O0PwPFmnfNWaAdZ25XyoYN1hPGR050JSQ0ud-UD1_krAuKmMGP-iD1faaJjwiqs0BXJHNe6Zu_2CMindr8bhh6QrF0FSC1te97bAyjpmSai5IfT9D7jPQaqxl33-MWuWE__UsJztRLGrrP62G5fkyUL5m27Eirhdd99J4JHke0G7PjECM4um4DJ1eJs5OG7mMFEvoVJAnOlaMsLKKEsmjN-Xll2kwJHbmXblDH2A9AKl33ZafmbyMTHEEZD1lK_D-96cTi27ldCE3ERWvtoEhCE-PXCJPIMJ3OHFWbfQ_YCUHgB4QHYK4VYjEIiPLZ2kk7H_tX2Ly0wwQNZfWqtv5ozG88s8hmAsE3nY1z8_ngNuvIEtHAD7dkhj_UuvtW18LDN8RuOcZrB3lp0TaNq0CLjzH7cUJX6NqCIpIP9i_Al63wMfjm6iHnQPwNZndvneKmdWWkvyBAXguSI".to_string();
+        let licence: String = "eyJhbGciOiJSUzI1NiJ9.eyJjbGFpbXMiOlt7ImtleSI6Imlzc3Vlcl9pZCIsInZhbHVlIjoiTmF0aW9uYWxfTWluaW5nX0F1dGhvcml0eSJ9LHsia2V5Ijoic3ViamVjdF9pZCIsInZhbHVlIjoiQUNNRV9NaW5pbmdfQ29tcGFueSJ9LHsia2V5IjoiaXNzdWVfZGF0ZSIsInZhbHVlIjoiMjAyNS0wMS0wMVQwMDowMDowMFoifSx7ImtleSI6ImV4cGlyeV9kYXRlIiwidmFsdWUiOiIyMDM1LTAxLTAxVDAwOjAwOjAwWiJ9LHsia2V5IjoiY291bnRyeV9vZl9vcGVyYXRpb24iLCJ2YWx1ZSI6IkdCIn0seyJrZXkiOiJyZWdpb25fb2Zfb3BlcmF0aW9uIiwidmFsdWUiOiJDb3Jud2FsbCJ9LHsia2V5Ijoic3ViamVjdF9wayIsInZhbHVlIjoie1xuICAgIFwiYWxnXCI6IFwiUlMyNTZcIixcbiAgICBcImVcIjogXCJBUUFCXCIsXG4gICAgXCJrZXlfb3BzXCI6IFtcbiAgICAgICAgXCJ2ZXJpZnlcIlxuICAgIF0sXG4gICAgXCJrdHlcIjogXCJSU0FcIixcbiAgICBcIm5cIjogXCJ6Y1F3WHgzRWV2T1NrZkgwVlNXcXRmbVdUTDRjMm9Jelc2dTgzcUtPMVc3WGpMZ1RxcHJ5TDV2TkNheGJWVGtwVS1HWmN0aXQwbjZrajU3MHRmbnlfc3k2cGIycTl3bHZGQm1EVnlELW5MNW9OalA1czNxRWZ2eTE1Qmw5dk1HRmYzenljcU1hVmdfN1ZSVndLNWQ4UXpwblZDMEFHVDEwUWRIbnlHQ2FkZlBKcWF6VHVWUnAxZjNlY0s3Ymc3NTk2c2dWYjhkOVdwYXoyWFB5a1FQZnBoc0ViNDB2Y3AxdFBOOTUtZVJDZ0EyNFB3ZlVhS1lIUVFGTUVRWV9hdEpXYmZmeUo5MXpzQlJ5OGZFUWRmdVFWWklSVlFnTzdGVHNtTG1RQUh4UjFkbDJqUDhCNnpvbldtdHFXb01Ib1pmYS1rbVRQQjR3TkhhOEVhTHZ0UTEwNjBxWUZtUVdXdW1mTkZuRzdITnEyZ1RIdDFjTjFIQ3dzdFJHSWFVX1pIdWJNX0ZLSF9nTGZKUEtOVzBLV01MOW1RUXpmNEFWb3YwWWZ2azg5V3hZOGlsU1J4NktvZEp1SUtLcXdWaF81OFBKUExtQnFzekVma1RqdHl4UHdQOFg4eFJYZlN6LXZUVTZ2RVNDazNPNlRSa25vSmtDMkJKWl9PTlEwVTVkeExjeFwiLFxuICAgIFwidXNlXCI6IFwic2lnXCIsXG4gICAgXCJraWRcIjogXCI2YWIwZThlNGJjMTIxZmMyODdlMzVkM2U1ZTBlZmI4YVwiXG59In1dfQ.mCnNzGYkmBsiLjJ-4Mj3eQsbZXQXjsIAETadL2upPt-0s9C24jdjYjQ8MAzRL8RgLN7lIzxZf4KEbOeQag6f4DTkqPbiZVF5ROO-L9MTHj4MN5UHbNixKxMCe1HAdcggNmvl0AepcI-mI8-_mq2Ttz3jhliXytk30VHznhh6Gq5Lh_WhPXc0Jn9vNDxiRZ5nyvrDFHWMpUZkk4c3yUngNiscYcgQXiAxpg23huJbCBDQolq_MvrIY6fV9pT5MiDRN-eq1WC1Yj9vOGZqDUVvOwqi16G0OSof52fNiil8Ouwn2at8WnHWo_Gi5E99MZX23q50JLCGcvpj-ITH2mYcuw".to_string();
+        let pk: String = NATIONAL_MINING_AUTHORITY_PK.to_string();
+        let conflict_zones: String = r#"{
+    "zones": [
+        {
+            "country": "GB",
+            "region": "Warwickshire"
+        },
+        {
+            "country": "GB",
+            "region": "London"
+        },
+        {
+            "country": "GB",
+            "region": "Cheshire"
+        },
+        {
+            "country": "GB",
+            "region": "Buckinghamshire"
+        },
+        {
+            "country": "GB",
+            "region": "Northumberland"
+        }
+    ]
+}"#
+        .to_string();
+
+        let (_, _) = prove_token_validation(passport, licence, pk, conflict_zones);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_invalid_licence_sig() {
+        let passport: String = "eyJhbGciOiJSUzI1NiJ9.eyJjbGFpbXMiOlt7ImtleSI6InNoaXBtZW50X2lkIiwidmFsdWUiOiI2NTMzMjEifSx7ImtleSI6Imlzc3VlX2RhdGUiLCJ2YWx1ZSI6IjIwMjUtMTItMDFUMDA6MDA6MDBaIn0seyJrZXkiOiJwcm9kdWN0IiwidmFsdWUiOiJMaXRoaXVtIn1dfQ.WphEqQT9DzJjNhPoYrRYlbNxEp2F3H0lvtmbP6uVNeMVMoV_2O0PwPFmnfNWaAdZ25XyoYN1hPGR050JSQ0ud-UD1_krAuKmMGP-iD1faaJjwiqs0BXJHNe6Zu_2CMindr8bhh6QrF0FSC1te97bAyjpmSai5IfT9D7jPQaqxl33-MWuWE__UsJztRLGrrP62G5fkyUL5m27Eirhdd99J4JHke0G7PjECM4um4DJ1eJs5OG7mMFEvoVJAnOlaMsLKKEsmjN-Xll2kwJHbmXblDH2A9AKl33ZafmbyMTHEEZD1lK_D-96cTi27ldCE3ERWvtoEhCE-PXCJPIMJ3OHFWbfQ_YCUHgB4QHYK4VYjEIiPLZ2kk7H_tX2Ly0wwQNZfWqtv5ozG88s8hmAsE3nY1z8_ngNuvIEtHAD7dkhj_UuvtW18LDN8RuOcZrB3lp0TaNq0CLjzH7cUJX6NqCIpIP9i_Al63wMfjm6iHnQPwNZndvneKmdWWkvyBAXguSI".to_string();
+        let licence: String = "eyJhbGciOiJSUzI1NiJ9.eyJjbGFpbXMiOlt7ImtleSI6Imlzc3Vlcl9pZCIsInZhbHVlIjoiTmF0aW9uYWxfTWluaW5nX0F1dGhvcml0eSJ9LHsia2V5Ijoic3ViamVjdF9pZCIsInZhbHVlIjoiQUNNRV9NaW5pbmdfQ29tcGFueSJ9LHsia2V5IjoiaXNzdWVfZGF0ZSIsInZhbHVlIjoiMjAyNS0wMS0wMVQwMDowMDowMFoifSx7ImtleSI6ImV4cGlyeV9kYXRlIiwidmFsdWUiOiIyMDM1LTAxLTAxVDAwOjAwOjAwWiJ9LHsia2V5IjoiY291bnRyeV9vZl9vcGVyYXRpb24iLCJ2YWx1ZSI6IkdCIn0seyJrZXkiOiJyZWdpb25fb2Zfb3BlcmF0aW9uIiwidmFsdWUiOiJDb3Jud2FsbCJ9LHsia2V5Ijoic3ViamVjdF9wayIsInZhbHVlIjoie1xuICAgIFwiYWxnXCI6IFwiUlMyNTZcIixcbiAgICBcImVcIjogXCJBUUFCXCIsXG4gICAgXCJrZXlfb3BzXCI6IFtcbiAgICAgICAgXCJ2ZXJpZnlcIlxuICAgIF0sXG4gICAgXCJrdHlcIjogXCJSU0FcIixcbiAgICBcIm5cIjogXCJ6Y1F3WHgzRWV2T1NrZkgwVlNXcXRmbVdUTDRjMm9Jelc2dTgzcUtPMVc3WGpMZ1RxcHJ5TDV2TkNheGJWVGtwVS1HWmN0aXQwbjZrajU3MHRmbnlfc3k2cGIycTl3bHZGQm1EVnlELW5MNW9OalA1czNxRWZ2eTE1Qmw5dk1HRmYzenljcU1hVmdfN1ZSVndLNWQ4UXpwblZDMEFHVDEwUWRIbnlHQ2FkZlBKcWF6VHVWUnAxZjNlY0s3Ymc3NTk2c2dWYjhkOVdwYXoyWFB5a1FQZnBoc0ViNDB2Y3AxdFBOOTUtZVJDZ0EyNFB3ZlVhS1lIUVFGTUVRWV9hdEpXYmZmeUo5MXpzQlJ5OGZFUWRmdVFWWklSVlFnTzdGVHNtTG1RQUh4UjFkbDJqUDhCNnpvbldtdHFXb01Ib1pmYS1rbVRQQjR3TkhhOEVhTHZ0UTEwNjBxWUZtUVdXdW1mTkZuRzdITnEyZ1RIdDFjTjFIQ3dzdFJHSWFVX1pIdWJNX0ZLSF9nTGZKUEtOVzBLV01MOW1RUXpmNEFWb3YwWWZ2azg5V3hZOGlsU1J4NktvZEp1SUtLcXdWaF81OFBKUExtQnFzekVma1RqdHl4UHdQOFg4eFJYZlN6LXZUVTZ2RVNDazNPNlRSa25vSmtDMkJKWl9PTlEwVTVkeExjeFwiLFxuICAgIFwidXNlXCI6IFwic2lnXCIsXG4gICAgXCJraWRcIjogXCI2YWIwZThlNGJjMTIxZmMyODdlMzVkM2U1ZTBlZmI4YVwiXG59In1dfQ.mCnNzGYkmBsiLjJ-4Mj3eQsbZXQXjsIAETadL2upPt-0s9C24jdjYkQ8MAzRL8RgLN7lIzxZf4KEbOeQag6f4DTkqPbiZVF5ROO-L9MTHj4MN5UHbNixKxMCe1HAdcggNmvl0AepcI-mI8-_mq2Ttz3jhliXytk30VHznhh6Gq5Lh_WhPXc0Jn9vNDxiRZ5nyvrDFHWMpUZkk4c3yUngNiscYcgQXiAxpg23huJbCBDQolq_MvrIY6fV9pT5MiDRN-eq1WC1Yj9vOGZqDUVvOwqi16G0OSof52fNiil8Ouwn2at8WnHWo_Gi5E99MZX23q50JLCGcvpj-ITH2mYcuw".to_string();
+        let pk: String = NATIONAL_MINING_AUTHORITY_PK.to_string();
+        let conflict_zones: String = r#"{
+    "zones": [
+        {
+            "country": "GB",
+            "region": "Warwickshire"
+        },
+        {
+            "country": "GB",
+            "region": "London"
+        },
+        {
+            "country": "GB",
+            "region": "Cheshire"
+        },
+        {
+            "country": "GB",
+            "region": "Buckinghamshire"
+        },
+        {
+            "country": "GB",
+            "region": "Northumberland"
+        }
+    ]
+}"#
+        .to_string();
+
+        let (_, _) = prove_token_validation(passport, licence, pk, conflict_zones);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_operating_in_conflict_zone() {
+        let passport: String = "eyJhbGciOiJSUzI1NiJ9.eyJjbGFpbXMiOlt7ImtleSI6InNoaXBtZW50X2lkIiwidmFsdWUiOiI2NTMzMjEifSx7ImtleSI6Imlzc3VlX2RhdGUiLCJ2YWx1ZSI6IjIwMjUtMTItMDFUMDA6MDA6MDBaIn0seyJrZXkiOiJwcm9kdWN0IiwidmFsdWUiOiJMaXRoaXVtIn1dfQ.WphEqQT9DzJjNhPoYrRYlbNxEp2F3H0lvtmbP6uVNeMVMoV_2O0PwPFmnfNWaAdZ25XyoYN1hPGR050JSQ0ud-UD1_krAuKmMGP-iD1faaJjwiqs0BXJHNe6Zu_2CMindr8bhh6QrF0FSC1te97bAyjpmSai5IfT9D7jPQaqxl33-MWuWE__UsJztRLGrrP62G5fkyUL5m27Eirhdd99J4JHke0G7PjECM4um4DJ1eJs5OG7mMFEvoVJAnOlaMsLKKEsmjN-Xll2kwJHbmXblDH2A9AKl33ZafmbyMTHEEZD1lK_D-96cTi27ldCE3ERWvtoEhCE-PXCJPIMJ3OHFWbfQ_YCUHgB4QHYK4VYjEIiPLZ2kk7H_tX2Ly0wwQNZfWqtv5ozG88s8hmAsE3nY1z8_ngNuvIEtHAD7dkhj_UuvtW18LDN8RuOcZrB3lp0TaNq0CLjzH7cUJX6NqCIpIP9i_Al63wMfjm6iHnQPwNZndvneKmdWWkvyBAXguSI".to_string();
+        let licence: String = "eyJhbGciOiJSUzI1NiJ9.eyJjbGFpbXMiOlt7ImtleSI6Imlzc3Vlcl9pZCIsInZhbHVlIjoiTmF0aW9uYWxfTWluaW5nX0F1dGhvcml0eSJ9LHsia2V5Ijoic3ViamVjdF9pZCIsInZhbHVlIjoiQUNNRV9NaW5pbmdfQ29tcGFueSJ9LHsia2V5IjoiaXNzdWVfZGF0ZSIsInZhbHVlIjoiMjAyNS0wMS0wMVQwMDowMDowMFoifSx7ImtleSI6ImV4cGlyeV9kYXRlIiwidmFsdWUiOiIyMDM1LTAxLTAxVDAwOjAwOjAwWiJ9LHsia2V5IjoiY291bnRyeV9vZl9vcGVyYXRpb24iLCJ2YWx1ZSI6IkdCIn0seyJrZXkiOiJyZWdpb25fb2Zfb3BlcmF0aW9uIiwidmFsdWUiOiJDb3Jud2FsbCJ9LHsia2V5Ijoic3ViamVjdF9wayIsInZhbHVlIjoie1xuICAgIFwiYWxnXCI6IFwiUlMyNTZcIixcbiAgICBcImVcIjogXCJBUUFCXCIsXG4gICAgXCJrZXlfb3BzXCI6IFtcbiAgICAgICAgXCJ2ZXJpZnlcIlxuICAgIF0sXG4gICAgXCJrdHlcIjogXCJSU0FcIixcbiAgICBcIm5cIjogXCJ6Y1F3WHgzRWV2T1NrZkgwVlNXcXRmbVdUTDRjMm9Jelc2dTgzcUtPMVc3WGpMZ1RxcHJ5TDV2TkNheGJWVGtwVS1HWmN0aXQwbjZrajU3MHRmbnlfc3k2cGIycTl3bHZGQm1EVnlELW5MNW9OalA1czNxRWZ2eTE1Qmw5dk1HRmYzenljcU1hVmdfN1ZSVndLNWQ4UXpwblZDMEFHVDEwUWRIbnlHQ2FkZlBKcWF6VHVWUnAxZjNlY0s3Ymc3NTk2c2dWYjhkOVdwYXoyWFB5a1FQZnBoc0ViNDB2Y3AxdFBOOTUtZVJDZ0EyNFB3ZlVhS1lIUVFGTUVRWV9hdEpXYmZmeUo5MXpzQlJ5OGZFUWRmdVFWWklSVlFnTzdGVHNtTG1RQUh4UjFkbDJqUDhCNnpvbldtdHFXb01Ib1pmYS1rbVRQQjR3TkhhOEVhTHZ0UTEwNjBxWUZtUVdXdW1mTkZuRzdITnEyZ1RIdDFjTjFIQ3dzdFJHSWFVX1pIdWJNX0ZLSF9nTGZKUEtOVzBLV01MOW1RUXpmNEFWb3YwWWZ2azg5V3hZOGlsU1J4NktvZEp1SUtLcXdWaF81OFBKUExtQnFzekVma1RqdHl4UHdQOFg4eFJYZlN6LXZUVTZ2RVNDazNPNlRSa25vSmtDMkJKWl9PTlEwVTVkeExjeFwiLFxuICAgIFwidXNlXCI6IFwic2lnXCIsXG4gICAgXCJraWRcIjogXCI2YWIwZThlNGJjMTIxZmMyODdlMzVkM2U1ZTBlZmI4YVwiXG59In1dfQ.mCnNzGYkmBsiLjJ-4Mj3eQsbZXQXjsIAETadL2upPt-0s9C24jdjYjQ8MAzRL8RgLN7lIzxZf4KEbOeQag6f4DTkqPbiZVF5ROO-L9MTHj4MN5UHbNixKxMCe1HAdcggNmvl0AepcI-mI8-_mq2Ttz3jhliXytk30VHznhh6Gq5Lh_WhPXc0Jn9vNDxiRZ5nyvrDFHWMpUZkk4c3yUngNiscYcgQXiAxpg23huJbCBDQolq_MvrIY6fV9pT5MiDRN-eq1WC1Yj9vOGZqDUVvOwqi16G0OSof52fNiil8Ouwn2at8WnHWo_Gi5E99MZX23q50JLCGcvpj-ITH2mYcuw".to_string();
+        let pk: String = NATIONAL_MINING_AUTHORITY_PK.to_string();
+        let conflict_zones: String = r#"{
+    "zones": [
+        {
+            "country": "GB",
+            "region": "Cheshire"
+        },
+        {
+            "country": "GB",
+            "region": "London"
+        },
+        {
+            "country": "GB",
+            "region": "Cornwall"
+        },
+        {
+            "country": "GB",
+            "region": "Buckinghamshire"
+        },
+        {
+            "country": "GB",
+            "region": "Northumberland"
+        }
+    ]
+}"#
+        .to_string();
+
+        let (_, _) = prove_token_validation(passport, licence, pk, conflict_zones);
+    }
 }
