@@ -1,3 +1,4 @@
+import os
 import subprocess
 from gooey import Gooey, GooeyParser
 
@@ -17,7 +18,7 @@ def main():
     )
     licence_group.add_argument('issuer_id', help="Issuer ID", default="National_Mining_Authority")
     licence_group.add_argument('subject_id', help="Subject ID", default="ACME_Mining_Company")
-    licence_group.add_argument('subject_pk_file', help="Subject Public Key file", widget="FileChooser")
+    licence_group.add_argument('subject_pk_file', help="Subject Public Key file", default="../test_data/mining_company_pk.jwk", widget="FileChooser")
     licence_group.add_argument('valid_from', help="Valid from", default="2025-01-01T00:00:00Z")
     licence_group.add_argument('valid_until', help="Valid until", default="2035-01-01T00:00:00Z")
     licence_group.add_argument('country_of_operation', help="Country of operation", default="GB")
@@ -28,7 +29,7 @@ def main():
 
     args = parser.parse_args()
 
-    command_output = subprocess.run(
+    output = subprocess.run(
         [
             "../target/release/gen_claims_file",
             "-p", tmp_claims_file,
@@ -41,10 +42,26 @@ def main():
             "--key-value-claim-pair", "region_of_operation," + args.region_of_operation
         ], capture_output=True, text=True)
     
-    print(command_output)
-    command_output = subprocess.run(["../target/release/sign", "-s", args.national_mining_authority_sk, '-c', tmp_claims_file, '-t', args.output_file], capture_output=True, text=True)
+    if output.returncode != 0:
+        print("An error occurred.")
+        print(output.stderr)
+        return
 
-    print(command_output)
+    output = subprocess.run(["../target/release/sign", "-s", args.national_mining_authority_sk, '-c', tmp_claims_file, '-t', args.output_file], capture_output=True, text=True)
+
+    if output.returncode == 0:
+        print("Done\n")
+    else: 
+        print("An error occurred.")
+        print(output.stderr)        
 
 if __name__ == "__main__":
     main()
+
+# The Python code in this repo simply presents a GUI for the CLI rust tool so we
+# just test the test data (default files) exist, which via the GitHub action
+# forces the developer to ensure that any changes to the test data are
+# propagated to the GUIs
+def test_default_files_exist():
+    assert os.path.exists("../test_data/national_mining_authority_sk.jwk")
+    assert os.path.exists("../test_data/mining_company_pk.jwk")

@@ -1,3 +1,4 @@
+import os
 import random
 import subprocess
 from gooey import Gooey, GooeyParser
@@ -23,16 +24,33 @@ def main():
 
     args = parser.parse_args()
 
-    command_output = subprocess.run([
+    output = subprocess.run([
         "../target/release/gen_claims_file",
         "--path-to-claims-file", tmp_claims_file,
         "--key-value-claim-pair", "shipment_id," + str(random.randint(0,10000000)),
         "--key-value-claim-pair", "issue_date," + args.issue_date,
         "--key-value-claim-pair", "product," + args.product],
         capture_output=True, text=True)
-    print(command_output)
-    command_output = subprocess.run(["../target/release/sign", "-s", args.mining_company_sk, '-c', tmp_claims_file, '-t', args.product_passport_file], capture_output=True, text=True)
-    print(command_output)
+
+    if output.returncode != 0:
+        print("An error occurred.")
+        print(output.stderr)
+        return
+
+    output = subprocess.run(["../target/release/sign", "-s", args.mining_company_sk, '-c', tmp_claims_file, '-t', args.product_passport_file], capture_output=True, text=True)
+    
+    if output.returncode == 0:
+        print("Done\n")
+    else: 
+        print("An error occurred.")
+        print(output.stderr)
 
 if __name__ == "__main__":
     main()
+
+# The Python code in this repo simply presents a GUI for the CLI rust tool so we
+# just test the test data (default files) exist, which via the GitHub action
+# forces the developer to ensure that any changes to the test data are
+# propagated to the GUIs
+def test_default_files_exist():
+    assert os.path.exists("../test_data/mining_company_sk.jwk")

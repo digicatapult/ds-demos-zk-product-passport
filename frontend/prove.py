@@ -17,9 +17,21 @@ def main():
     env["RISC0_DEV_MODE"] = "1"
 
     output = subprocess.run(["../target/release/prove", "--passport-file-path", args.passport, '--licence-file-path', args.licence, '--path-to-mining-authority-pk', args.verification_key, '--conflict-zones-file-path', args.conflict_zones, '--receipt-file-path', args.receipt_file], env=env, capture_output=True, text=True)
-    print(output)
 
-
+    if output.returncode == 0:
+        print("Done\n")
+    else: 
+        print("An error occurred.")
+        print(output.stderr)
+        return
 
 if __name__ == "__main__":
     main()
+
+# The Python code in this repo simply presents a GUI for the CLI rust tool so we
+# just test the test data (default files) exist, which via the GitHub action
+# forces the developer to ensure that any changes to the test data are
+# propagated to the GUIs
+def test_default_files_exist():
+    assert os.path.exists("../test_data/national_mining_authority_pk.jwk")
+    assert os.path.exists("../test_data/conflict_zones.json")

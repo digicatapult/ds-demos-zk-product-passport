@@ -1,7 +1,8 @@
 .DS_Store
-Cargo.lock
-methods/guest/Cargo.lock
 target/
 frontend/*.jwt
 frontend/*.json
 frontend/*.bin
+frontend/__pycache__
+frontend/.pytest_cache
+frontend/.venv
