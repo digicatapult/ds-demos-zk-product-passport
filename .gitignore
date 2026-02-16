@@ -3,5 +3,6 @@ target/
 *.jwt
 *.bin
 *.json
-frontend/__pycache__
+!renovate.json
+__pycache__
 .pytest_cache
