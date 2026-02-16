@@ -1,8 +1,7 @@
 .DS_Store
 target/
-frontend/*.jwt
-frontend/*.json
-frontend/*.bin
+*.jwt
+*.bin
+*.json
 frontend/__pycache__
-frontend/.pytest_cache
-frontend/.venv
+.pytest_cache

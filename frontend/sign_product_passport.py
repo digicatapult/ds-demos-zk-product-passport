@@ -10,7 +10,7 @@ def main():
         "ACME Mining Company signing key", 
         ""
     )
-    licence_group.add_argument('mining_company_sk', widget="FileChooser", default="../test_data/mining_company_sk.jwk")
+    licence_group.add_argument('mining_company_sk', widget="FileChooser", default="./test_data/mining_company_sk.jwk")
 
     licence_group = parser.add_argument_group(
         "Product passport details", 
@@ -24,7 +24,7 @@ def main():
     args = parser.parse_args()
 
     output = subprocess.run([
-        "../target/release/gen_claims_file",
+        "./target/release/gen_claims_file",
         "--path-to-claims-file", tmp_claims_file,
         "--key-value-claim-pair", "shipment_id," + str(random.randint(0,10000000)),
         "--key-value-claim-pair", "issue_date," + args.issue_date,
@@ -36,7 +36,7 @@ def main():
         print(output.stderr)
         return
 
-    output = subprocess.run(["../target/release/sign", "-s", args.mining_company_sk, '-c', tmp_claims_file, '-t', args.product_passport_file], capture_output=True, text=True)
+    output = subprocess.run(["./target/release/sign", "-s", args.mining_company_sk, '-c', tmp_claims_file, '-t', args.product_passport_file], capture_output=True, text=True)
     
     if output.returncode == 0:
         print("Done\n")
