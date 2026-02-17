@@ -14,15 +14,8 @@ precise details about who the supplier was.
 
 ## Installation
 - Install [rust](https://rust-lang.org/tools/install) and
-[RISC0](https://dev.risczero.com/api/zkvm/install), and then run `cargo build
-  --release` in the repository root.
-- Install dependencies for the frontend:
-```bash
-cd frontend
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
+[RISC0](https://dev.risczero.com/api/zkvm/install), and then run `cargo build`
+in the repository root.
 
 ## Running the demo
 The process is as follows:
@@ -36,16 +29,15 @@ listed in the `conflict_zones.json` input file, they will not be able to
 generate a zero-knowledge product passport that will be accepted by the
 verifier.
 
-Each operation can be performed using a GUI, e.g.:
+Run the following in the repository root:
 ```bash
-cd frontend
-source .venv/bin/activate
-python sign_mining_licence.py
+RISC0_DEV_MODE=true cargo run --bin tui 2>/dev/null
 ```
+
+> [!CAUTION]
+> If you do not use the `RISC0_DEV_MODE=true` parameter, a real proof will be
+> computed, which takes around 30 minutes on a laptop.  You can kill the process
+> by running `ps aux | grep cargo-risczero | grep -v grep | awk '{print $2}' | xargs kill -9`
 
 Test data is provided in the `./test_data` directory.  Here, you can modify the
 set of conflict zones.
-
-## Limitations
-Note that due to limitations of the GUI library, the frontend does not display
-properly when using dark mode on MacOS.
