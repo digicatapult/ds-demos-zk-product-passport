@@ -63,84 +63,7 @@ use uuid::Uuid;
 fn main() -> Result<()> {
     color_eyre::install()?;
 
-    let sign_licence_form = InputForm {
-        fields: Vec::from([
-            StringField::new("Issuer ID", "National_Mining_Authority".to_owned()),
-            StringField::new(
-                "Path to issuer signing key file",
-                "./test_data/national_mining_authority_sk.jwk".to_owned(),
-            ),
-            StringField::new("Subject ID", "ACME_Mining_Company".to_owned()),
-            StringField::new(
-                "Path to subject public key file",
-                "./test_data/mining_company_pk.jwk".to_owned(),
-            ),
-            StringField::new("Valid from", "2025-01-01T00:00:00Z".to_owned()),
-            StringField::new("Valid to", "2035-01-01T00:00:00Z".to_owned()),
-            StringField::new("Country of operation", "GB".to_owned()),
-            StringField::new("Region of operation", "Cornwall".to_owned()),
-            StringField::new("Path to output licence file", "./licence.jwt".to_owned()),
-        ]),
-        focus: 0,
-    };
-
-    let sign_product_passport_form = InputForm {
-        fields: Vec::from([
-            StringField::new("Product", "Lithium".to_owned()),
-            StringField::new("Issue date", "2025-12-01T00:00:00Z".to_owned()),
-            StringField::new(
-                "Path to signing key",
-                "./test_data/mining_company_sk.jwk".to_owned(),
-            ),
-            StringField::new(
-                "Path to output product passport file",
-                "./product_passport.jwt".to_owned(),
-            ),
-        ]),
-        focus: 0,
-    };
-
-    let prove_form = InputForm {
-        fields: Vec::from([
-            StringField::new(
-                "Path to product passport",
-                "./product_passport.jwt".to_owned(),
-            ),
-            StringField::new("Path to mining licence", "./licence.jwt".to_owned()),
-            StringField::new(
-                "Path to national mining authority verification key",
-                "./test_data/national_mining_authority_pk.jwk".to_owned(),
-            ),
-            StringField::new(
-                "Path to conflict zones file",
-                "./test_data/conflict_zones.json".to_owned(),
-            ),
-            StringField::new("Path to output proof", "./receipt.bin".to_owned()),
-        ]),
-        focus: 0,
-    };
-
-    let verify_form = InputForm {
-        fields: Vec::from([StringField::new(
-            "Path to proof",
-            "./receipt.bin".to_owned(),
-        )]),
-        focus: 0,
-    };
-
-    let app = App {
-        state: AppState::Running,
-        window: AppWindow::Home,
-        home: SelectScreen::default(),
-        sign_licence_form,
-        sign_product_passport_form,
-        prove_form,
-        verify_form,
-        result_text: "".to_string(),
-        show_popup: false,
-    };
-
-    match ratatui::run(|terminal| app.run(terminal)) {
+    match ratatui::run(|terminal| App::default().run(terminal)) {
         Ok(()) => println!("Exited"),
         Err(err) => eprintln!("{err}"),
     }
@@ -157,6 +80,87 @@ pub struct App {
     verify_form: InputForm,
     result_text: String,
     show_popup: bool,
+}
+
+impl Default for App {
+    fn default() -> Self {
+        let sign_licence_form = InputForm {
+            fields: Vec::from([
+                StringField::new("Issuer ID", "National_Mining_Authority".to_owned()),
+                StringField::new(
+                    "Path to issuer signing key file",
+                    "./test_data/national_mining_authority_sk.jwk".to_owned(),
+                ),
+                StringField::new("Subject ID", "ACME_Mining_Company".to_owned()),
+                StringField::new(
+                    "Path to subject public key file",
+                    "./test_data/mining_company_pk.jwk".to_owned(),
+                ),
+                StringField::new("Valid from", "2025-01-01T00:00:00Z".to_owned()),
+                StringField::new("Valid to", "2035-01-01T00:00:00Z".to_owned()),
+                StringField::new("Country of operation", "GB".to_owned()),
+                StringField::new("Region of operation", "Cornwall".to_owned()),
+                StringField::new("Path to output licence file", "./licence.jwt".to_owned()),
+            ]),
+            focus: 0,
+        };
+
+        let sign_product_passport_form = InputForm {
+            fields: Vec::from([
+                StringField::new("Product", "Lithium".to_owned()),
+                StringField::new("Issue date", "2025-12-01T00:00:00Z".to_owned()),
+                StringField::new(
+                    "Path to signing key",
+                    "./test_data/mining_company_sk.jwk".to_owned(),
+                ),
+                StringField::new(
+                    "Path to output product passport file",
+                    "./product_passport.jwt".to_owned(),
+                ),
+            ]),
+            focus: 0,
+        };
+
+        let prove_form = InputForm {
+            fields: Vec::from([
+                StringField::new(
+                    "Path to product passport",
+                    "./product_passport.jwt".to_owned(),
+                ),
+                StringField::new("Path to mining licence", "./licence.jwt".to_owned()),
+                StringField::new(
+                    "Path to national mining authority verification key",
+                    "./test_data/national_mining_authority_pk.jwk".to_owned(),
+                ),
+                StringField::new(
+                    "Path to conflict zones file",
+                    "./test_data/conflict_zones.json".to_owned(),
+                ),
+                StringField::new("Path to output proof", "./receipt.bin".to_owned()),
+            ]),
+            focus: 0,
+        };
+
+        let verify_form = InputForm {
+            fields: Vec::from([StringField::new(
+                "Path to proof",
+                "./receipt.bin".to_owned(),
+            )]),
+            focus: 0,
+        };
+
+        App {
+            state: AppState::Running,
+            window: AppWindow::Home,
+            home: SelectScreen::default(),
+            sign_licence_form,
+            sign_product_passport_form,
+            prove_form,
+            verify_form,
+            result_text: "".to_string(),
+            show_popup: false,
+        }
+    }
 }
 
 #[derive(PartialEq, Eq)]
@@ -588,5 +592,70 @@ impl Widget for &StringField {
         let label = Line::from_iter([self.label, ": "]).bold();
         label.render(label_area, buf);
         self.value.clone().render(value_area, buf);
+    }
+}
+
+#[cfg(test)]
+mod test {
+
+    use jwt_core::Validator;
+
+    use super::*;
+
+    #[test]
+    fn test_default_files_readable() {
+        // Ensures new commits do not mess up test data
+        // Testing takes place in <root>/host so need to go one level up
+        let app = App::default();
+
+        let args = app.sign_licence_form.get_form_fields();
+        assert!(File::open(&format!("../{}", args[1])).is_ok());
+        assert!(File::open(&format!("../{}", args[3])).is_ok());
+
+        let args = app.sign_product_passport_form.get_form_fields();
+        assert!(File::open(&format!("../{}", args[2])).is_ok());
+
+        let args = app.prove_form.get_form_fields();
+        assert!(File::open(&format!("../{}", args[1])).is_ok());
+        let args = app.prove_form.get_form_fields();
+        assert!(File::open(&format!("../{}", args[2])).is_ok());
+    }
+
+    #[test]
+    fn test_signing_key_parsable() {
+        // Ensures new commits do not mess up test data
+        // Testing takes place in <root>/host so need to go one level up
+        let app = App::default();
+
+        let args = app.sign_licence_form.get_form_fields();
+        let mut f = File::open(&format!("../{}", args[1])).unwrap();
+        let mut secret_key = "".to_string();
+        f.read_to_string(&mut secret_key).unwrap();
+        assert!(secret_key.parse::<Issuer>().is_ok());
+
+        let args = app.sign_product_passport_form.get_form_fields();
+        let mut f = File::open(&format!("../{}", args[2])).unwrap();
+        let mut secret_key = "".to_string();
+        f.read_to_string(&mut secret_key).unwrap();
+        assert!(secret_key.parse::<Issuer>().is_ok());
+    }
+
+    #[test]
+    fn test_verification_key_parsable() {
+        // Ensures new commits do not mess up test data
+        // Testing takes place in <root>/host so need to go one level up
+        let app = App::default();
+
+        let args = app.sign_licence_form.get_form_fields();
+        let mut f = File::open(&format!("../{}", args[3])).unwrap();
+        let mut public_key = "".to_string();
+        f.read_to_string(&mut public_key).unwrap();
+        assert!(public_key.parse::<Validator>().is_ok());
+
+        let args = app.prove_form.get_form_fields();
+        let mut f = File::open(&format!("../{}", args[2])).unwrap();
+        let mut public_key = "".to_string();
+        f.read_to_string(&mut public_key).unwrap();
+        assert!(public_key.parse::<Validator>().is_ok());
     }
 }
