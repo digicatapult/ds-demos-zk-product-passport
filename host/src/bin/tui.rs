@@ -418,7 +418,7 @@ impl App {
     fn render_result(&self, frame: &mut Frame) {
         let area = frame.area();
 
-        let block = Block::bordered().title("Result").on_black();
+        let block = Block::bordered().title("Result");
         let area = percentage_area(area, 80, 80);
         frame.render_widget(Clear, area);
         frame.render_widget(block, area);
@@ -530,7 +530,7 @@ impl InputForm {
     fn render(&self, frame: &mut Frame) {
         let area = frame.area();
 
-        let block = Block::bordered().title("Press <Enter> to submit").on_blue();
+        let block = Block::bordered().title("Press <Enter> to submit");
         let area = percentage_area(area, 80, 80);
         frame.render_widget(Clear, area);
         frame.render_widget(block, area);
