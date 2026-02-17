@@ -3,6 +3,9 @@ This demo is a modified version of the risc0 example for JWT verification from
 the main RISC Zero repository
 [https://github.com/risc0/risc0/blob/main/examples/jwt-validator/src/main.rs](https://github.com/risc0/risc0/blob/main/examples/jwt-validator/src/main.rs)
 
+> [!IMPORTANT]
+> This is proof-of-concept code and must not be used in a real environment.
+
 ## Scenario
 The demo provides a proof of concept of a 'zero-knowledge product passport',
 which allows, say, a distributor to prove the provenance of their product

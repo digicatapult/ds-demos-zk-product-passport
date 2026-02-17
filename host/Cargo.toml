@@ -16,6 +16,9 @@ base64 = "0.22.1"
 sha2 = "0.10.9"
 clap = { version = "4.5.46", features = ["derive"] }
 uuid = { version = "1.18.1", features = ["v4"] }
+ratatui = "0.30.0"
+crossterm = "0.29.0"
+color-eyre = "0.6.5"
 
 [features]
 cuda = ["risc0-zkvm/cuda"]
@@ -41,3 +44,7 @@ path = "./src/bin/verify.rs"
 [[bin]]
 name = "get_fingerprint"
 path = "./src/bin/get_fingerprint.rs"
+
+[[bin]]
+name = "tui"
+path = "./src/bin/tui.rs"

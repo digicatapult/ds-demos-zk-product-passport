@@ -27,11 +27,11 @@ use std::io::prelude::*;
 #[command(version, about, long_about = None)]
 struct Args {
     /// Path to signing key
-    #[arg(short, long)]
+    #[arg(long)]
     path_to_mining_authority_pk: String,
 
     /// Path to product passport
-    #[arg(short, long)]
+    #[arg(long)]
     passport_file_path: String,
 
     /// Path to licence
