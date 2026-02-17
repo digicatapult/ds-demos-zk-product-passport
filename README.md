@@ -1,4 +1,4 @@
-# Supply Chain Proof Demo
+# Zero Knowledge Product Passport
 This demo is a modified version of the risc0 example for JWT verification from
 the main RISC Zero repository
 [https://github.com/risc0/risc0/blob/main/examples/jwt-validator/src/main.rs](https://github.com/risc0/risc0/blob/main/examples/jwt-validator/src/main.rs)
