@@ -2692,12 +2692,12 @@ dependencies = [
 
 [[package]]
 name = "jwt-core"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "jwt-compact",
  "serde",
  "serde_json",
- "thiserror 1.0.69",
+ "thiserror 2.0.18",
 ]
 
 [[package]]
